@@ -11,6 +11,13 @@ services:
     ports:
       - "27017:27017" 
 
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672" 
+      - "15672:15672" 
+
   esourcing.products:
     container_name: esourcingproduct
     environment:
@@ -26,8 +33,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "SourcingDatabaseSettings:ConnectionString=mongodb://sourcingdb:27017"
+      - "EventGus:HostName=rabbitmq"
     depends_on:
       - sourcingdb
+      - rabbitmq
     ports:
       - "8001:80"
 
