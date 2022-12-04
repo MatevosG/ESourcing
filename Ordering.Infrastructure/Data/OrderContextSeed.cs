@@ -9,13 +9,13 @@ namespace Ordering.Infrastructure.Data
 {
     public class OrderContextSeed
     {
-        public static async Task SeedAsync(OrderContext orderContext)
+        public static void SeedAsync(OrderContext orderContext)
         {
             if (!orderContext.Orders.Any())
             {
                 orderContext.Orders.AddRange(GetPreconfiguredOrders());
 
-                await orderContext.SaveChangesAsync();
+                 orderContext.SaveChanges();
             }
         }
 

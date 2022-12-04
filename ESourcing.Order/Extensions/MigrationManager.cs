@@ -5,7 +5,7 @@ namespace ESourcing.Order.Extensions
 {
     public static class MigrationManager
     {
-        public static IHost MigrateDatabase(this IHost host)
+        public static  IHost MigrateDatabase(this IHost host)
         {
             using (var scope = host.Services.CreateScope())
             {
@@ -18,7 +18,7 @@ namespace ESourcing.Order.Extensions
                         orderContext.Database.Migrate();
                     }
 
-                    OrderContextSeed.SeedAsync(orderContext).Wait();
+                    OrderContextSeed.SeedAsync(orderContext);
                 }
                 catch (Exception ex)
                 {

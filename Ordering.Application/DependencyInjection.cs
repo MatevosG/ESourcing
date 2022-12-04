@@ -3,6 +3,11 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Ordering.Application.Mapper;
+using Ordering.Application.PipelineBehaviours;
+using Ordering.Domain.Repositories;
+using Ordering.Domain.Repositories.Base;
+using Ordering.Infrastructure.Repositories;
+using Ordering.Infrastructure.Repositories.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +25,13 @@ namespace Ordering.Application
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
+
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<IOrderRepository, OrderRepository>();
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
 
             #region Configure Mapper
             var config = new MapperConfiguration(cfg =>
