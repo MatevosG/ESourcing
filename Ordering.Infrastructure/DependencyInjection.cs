@@ -22,12 +22,17 @@ namespace Ordering.Infrastructure
             //                                    ServiceLifetime.Singleton,
             //                                    ServiceLifetime.Singleton);
             var ccc = configuration.GetConnectionString("OrderConnection");
-            services.AddDbContext<OrderContext>(options =>
-                    options.UseSqlServer(
-                        configuration.GetConnectionString("OrderConnection"),
-                        b => b.MigrationsAssembly(typeof(OrderContext).Assembly.FullName)), ServiceLifetime.Singleton);
+            //services.AddDbContext<OrderContext>(options =>
+            //        options.UseSqlServer(
+            //            configuration.GetConnectionString("OrderConnection"),
+            //            b => b.MigrationsAssembly(typeof(OrderContext).Assembly.FullName)), ServiceLifetime.Singleton);
             //services.AddDbContext<OrderContext>(options =>
             //   options.UseSqlServer(configuration.GetConnectionString("OrderConnection")));
+
+            services.AddDbContext<OrderContext>(option =>
+                    option.UseNpgsql(
+                        configuration
+                            .GetConnectionString("OrderConnection")));
 
             //Add Repositories
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));

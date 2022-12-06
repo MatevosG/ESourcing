@@ -8,7 +8,10 @@ services:
     image: rabbitmq:3-management
 
   sourcingsqldb:
-    image: mcr.microsoft.com/mssql/server
+    image: postgres
+
+  pgadmin:
+    image: dpage/pgadmin4
 
   esourcing.products:
     image: ${DOCKER_REGISTRY-}esourcingproducts
@@ -21,4 +24,11 @@ services:
     build:
       context: .
       dockerfile: Esourcing.Sourcing/Dockerfile
+
+
+  esourcing.order:
+    image: ${DOCKER_REGISTRY-}esourcingorder
+    build:
+      context: .
+      dockerfile: ESourcing.Order/Dockerfile
 
