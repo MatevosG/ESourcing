@@ -15,8 +15,8 @@ services:
     container_name: rabbitmq
     restart: always
     ports:
-      - "5672:5672" 
-      - "15672:15672" 
+      - "5672:5672"
+      - "15672:15672"
 
   pgadmin:
     container_name: pgadmin
@@ -56,7 +56,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "SourcingDatabaseSettings:ConnectionString=mongodb://sourcingdb:27017"
-      - "EventGus:HostName=rabbitmq"
+      - "EventBus:HostName=rabbitmq"
     depends_on:
       - sourcingdb
       - rabbitmq
@@ -67,7 +67,7 @@ services:
     container_name: esourcingorder
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "DatabaseSettings:ConnectionString=Server=sourcingsqldb;Port=5432;Database=SourcingsqlDb;User Id=admin;Password=admin1234;"
+      - "ConnectionStrings:OrderConnection=Server=sourcingsqldb;Port=5432;Database=SourcingsqlDb;User Id=admin;Password=admin1234;"
       - "EventGus:HostName=rabbitmq"
     depends_on:
       - sourcingsqldb
