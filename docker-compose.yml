@@ -32,6 +32,13 @@ services:
       context: .
       dockerfile: ESourcing.Order/Dockerfile
 
+  esourcing.apigateway:
+    image: ${DOCKER_REGISTRY-}esourcingapigateway
+    build:
+      context: .
+      dockerfile: ESourcing.APIGateway/Dockerfile
+
 volumes:
   postgres_data:
   pgadmin_data:
+
