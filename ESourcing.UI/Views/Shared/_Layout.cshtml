@@ -51,15 +51,15 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                        @* @if (SignInManager.IsSignedIn(User))
-                        {
+                        {*@
                             <li class="nav-item">
                                 <a class="nav-item nav-link">
                                     <img src="~/dist/img/avatar.png" class="img-circle elevation-2" alt="User Image" style="width:40px;">
                                     <p>
-                                        Welcome To " @UserManager.GetUserName(User) "
+                                        Welcome To "@* @UserManager.GetUserName(User)*@ "
                                     </p>
                                 </a>
-                            </li>*@
+                            </li>
 
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
@@ -92,11 +92,11 @@
                                     </p>
                                 </a>
                             </li>
-                        }
+                      @*  }
                         else
-                        {
+                        {*@
                             <li class="nav-item">
-                                <a class="nav-item nav-link" asp-controller="Home" asp-action="SignUp">
+                                <a class="nav-item nav-link" asp-controller="Home" asp-action="Signup">
                                     <i class="nav-icon far fa-user"></i>
                                     <p>
                                         Sign Up
@@ -111,7 +111,7 @@
                                     </p>
                                 </a>
                             </li>
-                        }
+                        @*}*@
                     </ul>
                 </nav>
             </div>

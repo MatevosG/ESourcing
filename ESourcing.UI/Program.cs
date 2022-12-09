@@ -1,9 +1,21 @@
+using ESourcing.Core.Entities;
+using ESourcing.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews();//.AddRazorRuntimeCompilation();
 builder.Services.AddMvc();
 builder.Services.AddRazorPages();
+
+builder.Services.AddDbContext<WebAppContext>(option =>
+                option.UseNpgsql(
+                    builder.Configuration
+                        .GetConnectionString("IdentityConnection")));
+
+builder.Services.AddIdentity<AppUser,IdentityRole>().AddDefaultTokenProviders().AddEntityFrameworkStores<WebAppContext>();
 
 var app = builder.Build();
 
