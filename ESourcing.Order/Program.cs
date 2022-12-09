@@ -71,5 +71,5 @@ app.UseSwaggerUI(c =>
 });
 
 
-app.Run();
-//app.MigrateDatabase().Run();
+//app.Run();
+app.MigrateDatabase().Run();

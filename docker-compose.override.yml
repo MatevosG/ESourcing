@@ -42,7 +42,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/
 
   esourcing.products:
-    container_name: esourcingproduct
+    container_name: esourcingproducts
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ProductDatabaseSettings:ConnectionString=mongodb://sourcingdb:27017"
