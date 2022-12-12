@@ -5,6 +5,7 @@ using ESourcing.Infrastructure.Data;
 using ESourcing.Infrastructure.Repositories;
 using ESourcing.Infrastructure.Repositories.Base;
 using ESourcing.UI;
+using ESourcing.UI.Clients;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +56,12 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = $"/Home/Logout";
 });
 
+builder.Services.AddHttpClient();
+
+builder.Services.AddHttpClient<ProductClient>();
+builder.Services.AddHttpClient<AuctionClient>();
+builder.Services.AddHttpClient<BidClient>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -82,4 +89,5 @@ app.UseEndpoints(endpoints =>
     endpoints.MapRazorPages();
 });
 
-app.CreateAndSeedDatabase().Run();
+//app.CreateAndSeedDatabase().Run();
+app.Run();

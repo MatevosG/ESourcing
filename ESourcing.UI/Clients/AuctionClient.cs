@@ -13,7 +13,7 @@ namespace ESourcing.UI.Clients
         public AuctionClient(HttpClient client)
         {
             _client = client;
-            _client.BaseAddress = new Uri(CommonInfo.BaseAddress);
+            _client.BaseAddress = new Uri(CommonInfo.LocalAuctionBaseAddress);
         }
 
         public async Task<Result<List<AuctionViewModel>>> GetAuctions()

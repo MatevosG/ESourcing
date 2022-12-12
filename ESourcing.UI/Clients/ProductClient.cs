@@ -12,7 +12,7 @@ namespace ESourcing.UI.Clients
         public ProductClient(HttpClient client)
         {
             _client = client;
-            _client.BaseAddress = new Uri(CommonInfo.BaseAddress);
+            _client.BaseAddress = new Uri(CommonInfo.LocalProductBaseAddress);
         }
 
         public async Task<Result<List<ProductViewModel>>> GetProducts()
