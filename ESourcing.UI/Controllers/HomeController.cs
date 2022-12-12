@@ -1,5 +1,6 @@
 ﻿using ESourcing.Core.Entities;
 using ESourcing.UI.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,20 +16,47 @@ namespace ESourcing.UI.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
+        
         public IActionResult Index()
         {
             return View();
         }
-        [HttpPost]
+       
         public IActionResult Login()
         {
             return View();
         }
-        public IActionResult Login(LoginViewModel loginModel)
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel loginModel, string returnUrl)
         {
+            returnUrl = returnUrl ?? Url.Content("~/");
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(loginModel.Email);
+                if (user != null)
+                {
+                    await _signInManager.SignOutAsync();
+
+                    var result = await _signInManager.PasswordSignInAsync(user, loginModel.Password, false, false);
+
+                    if (result.Succeeded)
+                    {
+                       // HttpContext.Session.SetString("IsAdmin", user.IsAdmin.ToString());
+                        return RedirectToAction("Index");
+                       // return LocalRedirect("Index");
+                    }
+                    else
+                        ModelState.AddModelError("", "Email address is not valid or password");
+                }
+                else
+                    ModelState.AddModelError("", "Email address is not valid or password");
+            }
             return View();
         }
-        public IActionResult Signup( )
+
+
+
+        public IActionResult Signup()
         {
             return View();
         }
@@ -67,6 +95,11 @@ namespace ESourcing.UI.Controllers
                 }
             }
             return View(signupModel);
+        }
+        public IActionResult Logout()
+        {
+            _signInManager.SignOutAsync();
+            return RedirectToAction("Login");
         }
     }
 }

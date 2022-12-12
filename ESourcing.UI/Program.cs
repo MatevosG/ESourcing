@@ -1,21 +1,59 @@
 using ESourcing.Core.Entities;
+using ESourcing.Core.Repositories;
+using ESourcing.Core.Repositories.Base;
 using ESourcing.Infrastructure.Data;
+using ESourcing.Infrastructure.Repositories;
+using ESourcing.Infrastructure.Repositories.Base;
+using ESourcing.UI;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();//.AddRazorRuntimeCompilation();
-builder.Services.AddMvc();
-builder.Services.AddRazorPages();
+
+
 
 builder.Services.AddDbContext<WebAppContext>(option =>
                 option.UseNpgsql(
                     builder.Configuration
                         .GetConnectionString("IdentityConnection")));
 
-builder.Services.AddIdentity<AppUser,IdentityRole>().AddDefaultTokenProviders().AddEntityFrameworkStores<WebAppContext>();
+builder.Services.AddIdentity<AppUser, IdentityRole>(opt =>
+{
+    opt.Password.RequiredLength = 4;
+    opt.Password.RequireNonAlphanumeric = false;
+    opt.Password.RequireLowercase = false;
+    opt.Password.RequireUppercase = false;
+    opt.Password.RequireDigit = false;
+})
+                .AddDefaultTokenProviders()
+                .AddEntityFrameworkStores<WebAppContext>();
+
+
+builder.Services.AddMvc();
+builder.Services.AddRazorPages();
+builder.Services.AddControllersWithViews();//.AddRazorRuntimeCompilation();
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+        .AddCookie(options =>
+        {
+            options.Cookie.Name = "My Coockie";
+            options.LoginPath = "Home/Login";
+            options.LogoutPath = "Home/Logout";
+            options.ExpireTimeSpan = TimeSpan.FromDays(3);
+            options.SlidingExpiration = false;
+        });
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = $"/Home/Login";
+    options.LogoutPath = $"/Home/Logout";
+});
 
 var app = builder.Build();
 
@@ -27,13 +65,14 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseAuthentication();
 app.MapRazorPages();
 
 app.UseEndpoints(endpoints =>
@@ -43,4 +82,4 @@ app.UseEndpoints(endpoints =>
     endpoints.MapRazorPages();
 });
 
-app.Run();
+app.CreateAndSeedDatabase().Run();
