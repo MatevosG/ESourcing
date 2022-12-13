@@ -35,6 +35,10 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(opt =>
 
 builder.Services.AddMvc();
 builder.Services.AddRazorPages();
+builder.Services.AddSession(opt =>
+{
+    opt.IdleTimeout = TimeSpan.FromMinutes(20);
+});
 builder.Services.AddControllersWithViews();//.AddRazorRuntimeCompilation();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -63,7 +67,7 @@ builder.Services.AddHttpClient<AuctionClient>();
 builder.Services.AddHttpClient<BidClient>();
 
 var app = builder.Build();
-
+app.UseSession();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

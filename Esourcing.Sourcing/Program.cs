@@ -1,5 +1,6 @@
 using Esourcing.Sourcing.Data;
 using Esourcing.Sourcing.Data.Interface;
+using Esourcing.Sourcing.Hubs;
 using Esourcing.Sourcing.Repositories;
 using Esourcing.Sourcing.Repositories.Interfaces;
 using Esourcing.Sourcing.Settings;
@@ -80,6 +81,17 @@ builder.Services.AddSingleton<EventBusRabbitMQProducer>();
 
 #endregion
 
+builder.Services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
+{
+    builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .WithOrigins("https://localhost:7285");
+}));
+
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -88,6 +100,8 @@ app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sourcing API V1");
 });
+
+app.MapHub<AuctionHub>("/auctionhub");
 
 app.UseAuthorization();
 
